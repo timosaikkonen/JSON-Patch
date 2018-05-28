@@ -207,7 +207,7 @@ function _generate(mirror, obj, patches, path) {
     var oldVal = mirror[key];
     if (hasOwnProperty(obj, key) && !(obj[key] === undefined && oldVal !== undefined && Array.isArray(obj) === false)) {
       var newVal = obj[key];
-      if (typeof oldVal == "object" && oldVal != null && typeof newVal == "object" && newVal != null) {
+      if (typeof oldVal === "object" && oldVal !== null && typeof newVal === "object" && newVal !== null && !(oldVal instanceof Date)) {
         _generate(oldVal, newVal, patches, path + "/" + escapePathComponent(key));
       }
       else {

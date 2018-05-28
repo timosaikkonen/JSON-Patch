@@ -626,6 +626,37 @@ describe('duplex', function() {
       expect(patches[0].value).toReallyEqual(5);
     });
 
+    it('should treat dates as ISO strings', function() {
+      var date1 = { d: new Date(1879, 3, 14) };
+      var date2 = { d: new Date(1879, 2, 14) };
+
+      var patches = jsonpatch.compare(date1, date2);
+
+      expect(patches.length).toEqual(1);
+      expect(patches[0].path).toEqual('/d');
+      expect(patches[0].value).toEqual(new Date(1879, 2, 14).toJSON());
+    });
+
+    it('should treat dates as ISO strings (array of dates)', function() {
+      var date1 = { d: [
+          new Date(1879, 2, 14),
+          new Date(1879, 3, 14)
+        ]
+      };
+
+      var date2 = { d: [
+          new Date(1879, 2, 14),
+          new Date(1879, 4, 14)
+        ]
+      };
+
+      var patches = jsonpatch.compare(date1, date2);
+
+      expect(patches.length).toEqual(2);
+      expect(patches[0].path).toEqual('/d/1');
+      expect(patches[1].path).toEqual('/d/0');
+    });
+
     /*it('should not generate the same patch twice (move)', function() { //"move" is not implemented yet in jsonpatch.generate
           obj = { lastName: {str: "Einstein"} };
           var observer = jsonpatch.observe(obj);
